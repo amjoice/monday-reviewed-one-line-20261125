@@ -34,10 +34,12 @@ joke arrives late).
 
 import os
 
-ENTRY = (
-    "One star: Monday's 9 a.m. standup ran 40 minutes, decided "
-    "nothing, and ended by scheduling a meeting to decide when to decide."
-)
+ENTRY_PARTS = [
+    "One star: Monday's 9 a.m. standup ran 40 minutes, decided ",
+    "nothing, and ended by scheduling a meeting to decide when to decide.",
+]
+
+ENTRY = "".join(ENTRY_PARTS)
 
 MAX_CHARS = 200
 OUTPUT_PATH = "/output/entry.txt"
@@ -57,10 +59,12 @@ def check_entry(text: str) -> str:
 
 def main() -> None:
     entry = check_entry(ENTRY)
+    output_dir = os.path.dirname(OUTPUT_PATH)
+    os.makedirs(output_dir, exist_ok=True)
     os.umask(0o022)
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, "w", encoding="utf-8", newline="\n") as f:
-        f.write(entry + "\n")
+    payload = entry + "\n"
+    with open(OUTPUT_PATH, "w", encoding="utf-8", newline="\n") as handle:
+        handle.write(payload)
     os.chmod(OUTPUT_PATH, 0o644)
 
 
